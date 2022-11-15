@@ -1,35 +1,33 @@
 export class Matrix {
-  numberString: string;
+  numbers: string;
 
   constructor(numbers: string) {
-    this.numberString = numbers;
+    this.numbers = numbers;
   }
 
   get rows(): Array<number[]> {
-    let mountMatrix = (str: string): Array<number[]> => {
+    let mountRows = (str: string): Array<number[]> => {
       let matrix: Array<number[]> = [[]];
       let row = 0;
-      let numbers: string[] = [...str];
-      numbers.forEach((char, i) => {
-        switch (true) {
-          //TODO: concatenar números entre espaços antes de testar
-          case /[0-9]/.test(char):
-            matrix[row].push(parseInt(char));
-            break;
-          case /\n/.test(char):
-            row++;
-            matrix.push([]);
-            break;
-          default:
-            null;
-        }
+      str.match(/[0-9]+|\n/g)?.forEach((item) => {
+        /[0-9]+/.test(item)
+          ? matrix[row].push(parseInt(item))
+          : (row++, matrix.push([]));
       });
       return matrix;
     };
-    return mountMatrix(this.numberString);
+    return mountRows(this.numbers);
   }
 
-  get columns(): number[] {
-    return [0];
+  get columns(): Array<number[]> {
+    const matrix: Array<number[]> = this.rows;
+    let columnsMatrix: Array<number[]> = [];
+    for (let i = 0; i < matrix.length; i++) {
+      for (let j = 0; j < matrix[0].length; j++) {
+        i === 0 ? columnsMatrix.push([]) : null;
+        columnsMatrix[j].push(matrix[i][j]);
+      }
+    }
+    return columnsMatrix;
   }
 }
